@@ -1,0 +1,43 @@
+<style>
+.reveal section del {
+  color: red;
+}
+</style>
+
+Country Picker
+========================================================
+author: Paul King
+date: 12 March 2017
+autosize: true
+
+The Commission
+========================================================
+
+My client, who is a project manager for a development NGO, wanted to be able to produce simple map images with specific countries highlighted. The tool should:
+
+- be easy and ~~quick~~ to use from any browser
+- allow map images to be saved as an image
+- be useable interactively
+
+The pilot
+========================================================
+
+The initial proposal uses a shiny app based on the `rworldmap` package. The aims of this pilot are:
+
+- to demonstrate that a useable tool can be built, and shared, ~~quickly~~
+- to establish a base for further discussions with the client about their detailed needs and formatting requirements
+- to produce something quick and dirty to act as a base for future exploration and development
+
+Initial data
+========================================================
+The tool intitially uses the example country data provided with `rworldmap`. The default countries selected are those where the NGO currently operates:
+
+- x countries
+- total population (2005) of
+- average GDP per capita of
+- all except one in Africa
+
+The default map
+========================================================
+Can you name the none-African country highlighted?
+
