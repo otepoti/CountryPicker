@@ -9,6 +9,7 @@ Country Picker
 author: Paul King
 date: 12 March 2017
 autosize: true
+transition: rotate
 
 The Commission
 ========================================================
@@ -21,6 +22,7 @@ My client, who is a project manager for a development NGO, wanted to be able to 
 
 The pilot
 ========================================================
+incremental: true
 
 The initial proposal uses a shiny app based on the `rworldmap` package. The aims of this pilot are:
 
@@ -30,14 +32,58 @@ The initial proposal uses a shiny app based on the `rworldmap` package. The aims
 
 Initial data
 ========================================================
-The tool intitially uses the example country data provided with `rworldmap`. The default countries selected are those where the NGO currently operates:
+The tool intitially uses the example country data provided with `rworldmap`. The default countries selected are those where the NGO currently operates. 
+```{r calculate_statistics, echo=FALSE}
+library(rworldmap)
+data(countryExData)
+countryExData$Plot_Cat <- rep(factor('noShow', levels=c('noShow', 'Show', 'NGO')),
+                              length.out = nrow(countryExData))
 
-- x countries
-- total population (2005) of
-- average GDP per capita of
-- all except one in Africa
+ngoCountries <- c('CMR', 'GHA', 'KEN', 'MWI', 'NGA', 'NPL', 'TZA', 'UGA', 'ZMB')
+ngoData <- countryExData[countryExData$ISO3V10 %in% ngoCountries,]
+ngoCount <- nrow(ngoData)
+ngoGDP <- sum(ngoData$GDP_capita.MRYA*ngoData$Population2005)/
+  sum(ngoData$Population2005)
+```
+
+Figures below are calculated from the raw data set, for example:
+
+
+```{r}
+ngoPopulation <- sum(ngoData$Population2005)/1000
+```
+
+- `r ngoCount` countries
+- total population (2005) of `r round(ngoPopulation, 1)` million
+- average GDP per capita of `r round(ngoGDP)` USD
+- all except one of the countries are in Africa
 
 The default map
 ========================================================
-Can you name the none-African country highlighted?
+Can you name the non-African country highlighted?
+
+```{r no_warnings, echo=FALSE, fig.width= 18, fig.width = 12, include = FALSE}
+countryExData$Plot_Cat <- rep(factor('noShow', levels=c('noShow', 'Show', 'NGO')),
+                              length.out = nrow(countryExData))
+
+ngoCountries <- c('CMR', 'GHA', 'KEN', 'MWI', 'NGA', 'NPL', 'TZA', 'UGA', 'ZMB')
+countryExData$Plot_Cat[countryExData$ISO3V10 %in% ngoCountries] <- 'NGO'
+op <- palette(c('white','yellow', 'orange'))
+sPDF <- joinCountryData2Map( countryExData, joinCode = "ISO3",
+                             nameJoinColumn = "ISO3V10",
+                             verbose = FALSE)
+```
+
+```{r plot_map, echo=FALSE, fig.width= 18, fig.width = 12}
+par(mai=c(0,0,0.2,0),xaxs="i",yaxs="i")
+mapParams <- mapCountryData(sPDF, 
+                      nameColumnToPlot='Plot_Cat',
+                      catMethod='categorical',
+                      mapTitle='',
+                      colourPalette='palette',
+                      addLegend = FALSE,
+                      oceanCol='lightblue',
+                      missingCountryCol='white',
+                      mapRegion = 'world')
+```
 
